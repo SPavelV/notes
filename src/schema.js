@@ -16,6 +16,6 @@ module.exports = gql`
   type Mutation {
     newNote(content: String!): Note!
     updateNote(id: ID!, content: String!): Note!
-    deleteNode(id: ID!): Boolean!
+    deleteNote(id: ID!): Boolean!
   }
 `;

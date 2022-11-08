@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const {
   AuthenticationError,
@@ -10,10 +11,16 @@ require('dotenv').config();
 const gravatar = require('gravatar');
 
 module.exports = {
-  newNote: async (parent, args, { models }) => {
+  newNote: async (parent, args, { models, user }) => {
+    // Если в контексте нет пользователя, выбрасываем AuthenticationError
+    if (!user) {
+      throw new AuthenticationError('You must be signed in to create a note');
+    }
+
     let noteValue = {
       content: args.content,
-      author: 'Some Man'
+      // Ссылаемся на mongo id автора
+      author: mongoose.Types.ObjectId(user.id)
     };
 
     return await models.Note.create(noteValue);
@@ -108,5 +115,5 @@ module.exports = {
 //   username: "BeeBoop",
 //   email: "robot@example.com",
 `//   password: "NotARobot10010!"
-`//   )
+`; //   )
 // }
